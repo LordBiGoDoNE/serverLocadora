@@ -7,11 +7,12 @@ import org.springframework.data.annotation.Id;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
-public class Fabricante {
+public class Modelo {
 
     @Id
     private int id;
 
     private String nome;
+
+    private Fabricante fabricante;
 }
