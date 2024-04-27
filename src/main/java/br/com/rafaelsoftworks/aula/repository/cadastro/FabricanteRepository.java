@@ -1,4 +1,4 @@
-package br.com.rafaelsoftworks.aula.repository.fabricante;
+package br.com.rafaelsoftworks.aula.repository.cadastro;
 
 import br.com.rafaelsoftworks.aula.model.entity.Fabricante;
 import org.springframework.data.jdbc.repository.query.Modifying;

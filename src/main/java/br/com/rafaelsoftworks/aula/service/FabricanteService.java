@@ -1,7 +1,8 @@
 package br.com.rafaelsoftworks.aula.service;
 
 import br.com.rafaelsoftworks.aula.model.entity.Fabricante;
-import br.com.rafaelsoftworks.aula.repository.fabricante.FabricanteRepository;
+import br.com.rafaelsoftworks.aula.repository.cadastro.FabricanteRepository;
+import br.com.rafaelsoftworks.aula.repository.cadastro.FabricanteRepositoryCustom;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,8 +14,11 @@ public class FabricanteService {
     @Autowired
     FabricanteRepository repository;
 
+    @Autowired
+    FabricanteRepositoryCustom repositoryJdbcClient;
+
     public List<Fabricante> obterTodosFabricante() {
-        return repository.findAll();
+        return repositoryJdbcClient.buscarTodosFabricantes();
     }
 
     public void inserirFabricante(String nome) {
