@@ -3,6 +3,8 @@ package br.com.rafaelsoftworks.aula;
 import br.com.rafaelsoftworks.aula.model.entity.Carro;
 import br.com.rafaelsoftworks.aula.model.entity.Fabricante;
 import br.com.rafaelsoftworks.aula.model.entity.Modelo;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -85,6 +87,22 @@ class LocadoraApplicationTests {
 
         nomeFabricantes.forEach(System.out::println);
         nomeFabricantesStream.forEach(System.out::println);
+    }
+
+    @Test
+    void testJson() throws JsonProcessingException {
+        String json = """
+                    {
+                        "id": 1,
+                        "nome": "Rafael"
+                    }
+                    """;
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        Fabricante rafael = mapper.readValue(json, Fabricante.class);
+
+        System.out.println(rafael.toString());
     }
 }
 

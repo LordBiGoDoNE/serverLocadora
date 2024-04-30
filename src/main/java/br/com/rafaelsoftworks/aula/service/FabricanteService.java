@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FabricanteService {
@@ -16,6 +17,11 @@ public class FabricanteService {
 
     @Autowired
     FabricanteRepositoryCustom repositoryJdbcClient;
+
+    public FabricanteService(FabricanteRepository repository, FabricanteRepositoryCustom repositoryJdbcClient) {
+        this.repository = repository;
+        this.repositoryJdbcClient = repositoryJdbcClient;
+    }
 
     public List<Fabricante> obterTodosFabricante() {
         return repositoryJdbcClient.buscarTodosFabricantes();
@@ -33,7 +39,9 @@ public class FabricanteService {
     }
 
     public void atualizarFabricante(Fabricante fabricante) {
-        Fabricante fabricanteBanco = repository.findById(fabricante.getId()).orElseThrow(
+        Optional<Fabricante> fabricanteOptional = repository.findById(fabricante.getId());
+
+        Fabricante fabricanteBanco = fabricanteOptional.orElseThrow(
                 () -> new RuntimeException("Fabricante não encontrado")
         );
 
