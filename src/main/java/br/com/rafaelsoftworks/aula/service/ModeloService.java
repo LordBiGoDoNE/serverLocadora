@@ -1,6 +1,7 @@
 package br.com.rafaelsoftworks.aula.service;
 
 import br.com.rafaelsoftworks.aula.exception.ValorNaoExistenteNaBaseDeDadosException;
+import br.com.rafaelsoftworks.aula.model.dto.ModeloDTO;
 import br.com.rafaelsoftworks.aula.model.entity.Fabricante;
 import br.com.rafaelsoftworks.aula.model.entity.Modelo;
 import br.com.rafaelsoftworks.aula.repository.cadastro.ModeloRepositoryCustom;
@@ -16,19 +17,19 @@ public class ModeloService {
     @Autowired
     ModeloRepositoryCustom repository;
 
-    public List<Modelo> obterTodosModelos(Integer idFabricante) {
+    public List<ModeloDTO> obterTodosModelos(Integer idFabricante) {
         return repository.buscarTodosModelos(idFabricante);
     }
 
     @Transactional
-    public Modelo criarModelo(Modelo modelo) {
+    public ModeloDTO criarModelo(Modelo modelo) {
         Integer idModelo = repository.criarModelo(modelo);
 
         return repository.buscarModeloPorId(idModelo).get();
     }
 
     @Transactional
-    public Modelo atualizarModelo(Modelo modelo) {
+    public ModeloDTO atualizarModelo(Modelo modelo) {
         checarSeExisteModelo(modelo.getId());
 
         repository.atualizarModelo(modelo);
@@ -45,7 +46,7 @@ public class ModeloService {
         return String.format("Modelo deletado com sucesso. Linhas afetadas %d", quantidadeLinhasDeletadas);
     }
 
-    public Modelo buscarModeloPorId(Integer idModelo) {
+    public ModeloDTO buscarModeloPorId(Integer idModelo) {
         return repository.buscarModeloPorId(idModelo)
                 .orElseThrow(() -> new ValorNaoExistenteNaBaseDeDadosException(idModelo.toString()));
     }

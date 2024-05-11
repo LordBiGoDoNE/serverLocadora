@@ -27,6 +27,10 @@ public class FabricanteService {
     public List<Fabricante> obterTodosFabricante() {
         return repositoryJdbcClient.buscarTodosFabricantes();
     }
+    
+    public Fabricante obterFabricantePorId(Integer idFabricante) {
+        return repository.findById(idFabricante).get();
+    }
 
     public void inserirFabricante(Integer id, String nome) {
         Fabricante fabricante = new Fabricante();

@@ -25,6 +25,11 @@ public class FabricanteController {
     public ResponseEntity<List<Fabricante>> getFabricantes() {
         return ResponseEntity.status(HttpStatus.OK).body(service.obterTodosFabricante());
     }
+    
+    @GetMapping("/{id}")
+    public ResponseEntity<Fabricante> getFabricantes(@PathVariable(value = "id") Integer id) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.obterFabricantePorId(id));
+    }
 
     @PostMapping
     public ResponseEntity<String> salvarFabricante(@RequestBody Fabricante fabricante) {

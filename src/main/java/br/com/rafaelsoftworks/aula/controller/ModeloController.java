@@ -1,8 +1,7 @@
 package br.com.rafaelsoftworks.aula.controller;
 
-import br.com.rafaelsoftworks.aula.model.entity.Fabricante;
+import br.com.rafaelsoftworks.aula.model.dto.ModeloDTO;
 import br.com.rafaelsoftworks.aula.model.entity.Modelo;
-import br.com.rafaelsoftworks.aula.service.FabricanteService;
 import br.com.rafaelsoftworks.aula.service.ModeloService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,23 +19,23 @@ public class ModeloController {
     ModeloService service;
 
     @GetMapping
-    public ResponseEntity<List<Modelo>> getModelos(
+    public ResponseEntity<List<ModeloDTO>> getModelos(
             @RequestParam(defaultValue = "0", required = false) Integer idFabricante) {
         return ResponseEntity.status(HttpStatus.OK).body(service.obterTodosModelos(idFabricante));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Modelo> getModelo(@PathVariable(value = "id") Integer id) {
+    public ResponseEntity<ModeloDTO> getModelo(@PathVariable(value = "id") Integer id) {
         return ResponseEntity.status(HttpStatus.OK).body(service.buscarModeloPorId(id));
     }
 
     @PostMapping
-    public ResponseEntity<Modelo> insertModelo(@RequestBody Modelo modelo) {
+    public ResponseEntity<ModeloDTO> insertModelo(@RequestBody Modelo modelo) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.criarModelo(modelo));
     }
 
     @PatchMapping
-    public ResponseEntity<Modelo> atualizarModelo(@RequestBody Modelo modelo) {
+    public ResponseEntity<ModeloDTO> atualizarModelo(@RequestBody Modelo modelo) {
         return ResponseEntity.status(HttpStatus.OK).body(service.atualizarModelo(modelo));
     }
 
