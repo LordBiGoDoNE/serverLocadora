@@ -7,12 +7,19 @@ import org.springframework.data.annotation.Id;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class Carro {
 
     @Id
     private int id;
 
-    private String nome;
+    private int idModelo;
 
-    private Modelo modelo;
+    private String placa;
+
+    private String cor;
+
+    private boolean disponivel;
+
+    private int ano;
 }

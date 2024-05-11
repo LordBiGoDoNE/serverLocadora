@@ -1,13 +1,17 @@
 package br.com.rafaelsoftworks.aula.controller;
 
+import br.com.rafaelsoftworks.aula.exception.AbstractMinhaException;
 import br.com.rafaelsoftworks.aula.model.entity.Fabricante;
+import br.com.rafaelsoftworks.aula.model.json.response.ExceptionResponse;
 import br.com.rafaelsoftworks.aula.service.FabricanteService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -24,13 +28,9 @@ public class FabricanteController {
 
     @PostMapping
     public ResponseEntity<String> salvarFabricante(@RequestBody Fabricante fabricante) {
-        try {
-            service.inserirFabricante(fabricante.getNome());
+        service.inserirFabricante(fabricante.getId(), fabricante.getNome());
 
-            return ResponseEntity.status(HttpStatus.CREATED).body("Fabricante salvo com sucesso!");
-        } catch (Exception ex) {
-            return ResponseEntity.internalServerError().body("Erro ao inserir novo Fabricante");
-        }
+        return ResponseEntity.status(HttpStatus.CREATED).body("Fabricante salvo com sucesso!");
     }
 
     @DeleteMapping("/{id}")
@@ -53,5 +53,10 @@ public class FabricanteController {
         } catch (Exception ex) {
             return ResponseEntity.internalServerError().body("Erro ao atualizar Fabricante: " + ex.getMessage());
         }
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ExceptionResponse> handleAbstractMinhaException(AbstractMinhaException ex, HttpServletRequest request) throws IOException {
+        return ResponseEntity.internalServerError().body(new ExceptionResponse(ex, request.getRequestURI()));
     }
 }

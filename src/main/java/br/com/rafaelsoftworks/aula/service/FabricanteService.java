@@ -1,5 +1,6 @@
 package br.com.rafaelsoftworks.aula.service;
 
+import br.com.rafaelsoftworks.aula.exception.ValorJaExistenteNaBaseDeDadosException;
 import br.com.rafaelsoftworks.aula.model.entity.Fabricante;
 import br.com.rafaelsoftworks.aula.repository.cadastro.FabricanteRepository;
 import br.com.rafaelsoftworks.aula.repository.cadastro.FabricanteRepositoryCustom;
@@ -27,9 +28,14 @@ public class FabricanteService {
         return repositoryJdbcClient.buscarTodosFabricantes();
     }
 
-    public void inserirFabricante(String nome) {
+    public void inserirFabricante(Integer id, String nome) {
         Fabricante fabricante = new Fabricante();
+        fabricante.setId(id);
         fabricante.setNome(nome);
+
+        if (repository.existsById(id)) {
+            throw new ValorJaExistenteNaBaseDeDadosException();
+        }
 
         repository.save(fabricante);
     }
