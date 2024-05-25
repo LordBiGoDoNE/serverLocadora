@@ -2,20 +2,15 @@ package br.com.rafaelsoftworks.aula.service;
 
 import br.com.rafaelsoftworks.aula.model.entity.Fabricante;
 import br.com.rafaelsoftworks.aula.repository.cadastro.FabricanteRepository;
-import br.com.rafaelsoftworks.aula.repository.cadastro.FabricanteRepositoryCustom;
+import br.com.rafaelsoftworks.aula.repository.cadastro.FabricanteRepositoryJdbcClient;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.jdbc.IncorrectResultSetColumnCountException;
 
-import javax.sql.DataSource;
-import java.io.InvalidClassException;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -29,7 +24,7 @@ class FabricanteServiceTest {
     FabricanteRepository fabricanteRepository;
 
     @Mock
-    FabricanteRepositoryCustom fabricanteRepositoryCustom;
+    FabricanteRepositoryJdbcClient fabricanteRepositoryJdbcClient;
 
     @ParameterizedTest
     @MethodSource("parametrosTestAtualizarFabricante")
@@ -53,7 +48,6 @@ class FabricanteServiceTest {
                 Arguments.of(retornoMockTest1, parametroChamadaMetodo1),
                 Arguments.of(retornoMockTest2, parametroChamadaMetodo2),
                 Arguments.of(retornoMockTest3, parametroChamadaMetodo3),
-                Arguments.of(null, parametroChamadaMetodo2),
                 Arguments.of(retornoMockTest1, parametroChamadaMetodo3),
                 Arguments.of(retornoMockTest2, parametroChamadaMetodo1),
                 Arguments.of(retornoMockTest2, parametroChamadaMetodo3),

@@ -9,17 +9,12 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class FabricanteRepositoryCustom {
+public class FabricanteRepositoryJdbcClient {
 
     @Autowired
     JdbcClient jdbcClient;
 
     public List<Fabricante> buscarTodosFabricantes() {
-        List<Fabricante> fabricantes = jdbcClient
-                .sql("SELECT * FROM fabricante")
-                .query(Fabricante.class)
-                .list();
-
         RowMapper<Fabricante> mapperFabricante = (rs, rowNum) -> {
             Fabricante fabricante = new Fabricante();
             fabricante.setId(rs.getInt("id"));
@@ -28,11 +23,9 @@ public class FabricanteRepositoryCustom {
             return fabricante;
         };
 
-        List<Fabricante> fabricantes2 = jdbcClient
+        return jdbcClient
                 .sql("SELECT * FROM fabricante")
                 .query(mapperFabricante)
                 .list();
-
-        return fabricantes;
     }
 }

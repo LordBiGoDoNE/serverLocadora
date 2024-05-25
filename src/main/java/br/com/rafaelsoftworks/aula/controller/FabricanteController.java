@@ -13,44 +13,39 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/api/fabricante")
-public class FabricanteController {
+public class FabricanteController implements CrudController<Fabricante> {
 
     @Autowired
     FabricanteService service;
 
-    @GetMapping
-    public ResponseEntity<List<Fabricante>> getFabricantes() {
-        return ResponseEntity.status(HttpStatus.OK).body(service.obterTodosFabricante());
+    @ExceptionHandler
+    public ResponseEntity<ExceptionResponse> handleAbstractMinhaException(AbstractMinhaException ex, HttpServletRequest request) throws IOException {
+        return ResponseEntity.internalServerError().body(new ExceptionResponse(ex, request.getRequestURI()));
     }
-    
-    @GetMapping("/{id}")
-    public ResponseEntity<Fabricante> getFabricantes(@PathVariable(value = "id") Integer id) {
+
+    @Override
+    public ResponseEntity<?> get(Integer id) {
         return ResponseEntity.status(HttpStatus.OK).body(service.obterFabricantePorId(id));
     }
 
-    @PostMapping
-    public ResponseEntity<String> salvarFabricante(@RequestBody Fabricante fabricante) {
+    @Override
+    public ResponseEntity<List<?>> getAll(Map<String, String> parametros) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.obterTodosFabricante());
+    }
+
+    @Override
+    public ResponseEntity<?> insert(Fabricante fabricante) {
         service.inserirFabricante(fabricante.getId(), fabricante.getNome());
 
         return ResponseEntity.status(HttpStatus.CREATED).body("Fabricante salvo com sucesso!");
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deletarFabricante(@PathVariable(value = "id") Integer id) {
-        try {
-            service.deletarFabricante(id);
-
-            return ResponseEntity.status(HttpStatus.CREATED).body("Fabricante excluido com sucesso!");
-        } catch (Exception ex) {
-            return ResponseEntity.internalServerError().body("Erro ao excluir Fabricante");
-        }
-    }
-
-    @PatchMapping
-    public ResponseEntity<String> atualizarFabricante(@RequestBody Fabricante fabricante) {
+    @Override
+    public ResponseEntity<?> update(Fabricante fabricante) {
         try {
             service.atualizarFabricante(fabricante);
 
@@ -60,8 +55,14 @@ public class FabricanteController {
         }
     }
 
-    @ExceptionHandler
-    public ResponseEntity<ExceptionResponse> handleAbstractMinhaException(AbstractMinhaException ex, HttpServletRequest request) throws IOException {
-        return ResponseEntity.internalServerError().body(new ExceptionResponse(ex, request.getRequestURI()));
+    @Override
+    public ResponseEntity<String> delete(Integer id) {
+        try {
+            service.deletarFabricante(id);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body("Fabricante excluido com sucesso!");
+        } catch (Exception ex) {
+            return ResponseEntity.internalServerError().body("Erro ao excluir Fabricante");
+        }
     }
 }

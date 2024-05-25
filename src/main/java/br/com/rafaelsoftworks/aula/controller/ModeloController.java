@@ -1,5 +1,6 @@
 package br.com.rafaelsoftworks.aula.controller;
 
+import br.com.rafaelsoftworks.aula.filter.ModeloFilter;
 import br.com.rafaelsoftworks.aula.model.dto.ModeloDTO;
 import br.com.rafaelsoftworks.aula.model.entity.Modelo;
 import br.com.rafaelsoftworks.aula.service.ModeloService;
@@ -10,37 +11,39 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/api/modelo")
-public class ModeloController {
+public class ModeloController implements CrudController<Modelo>{
 
     @Autowired
     ModeloService service;
 
-    @GetMapping
-    public ResponseEntity<List<ModeloDTO>> getModelos(
-            @RequestParam(defaultValue = "0", required = false) Integer idFabricante) {
-        return ResponseEntity.status(HttpStatus.OK).body(service.obterTodosModelos(idFabricante));
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<ModeloDTO> getModelo(@PathVariable(value = "id") Integer id) {
+    @Override
+    public ResponseEntity<?> get(Integer id) {
         return ResponseEntity.status(HttpStatus.OK).body(service.buscarModeloPorId(id));
     }
 
-    @PostMapping
-    public ResponseEntity<ModeloDTO> insertModelo(@RequestBody Modelo modelo) {
+    @Override
+    public ResponseEntity<List<?>> getAll(Map<String, String> parametros) {
+        ModeloFilter filter = new ModeloFilter(parametros);
+
+        return ResponseEntity.status(HttpStatus.OK).body(service.obterTodosModelos(filter));
+    }
+
+    @Override
+    public ResponseEntity<?> insert(Modelo modelo) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.criarModelo(modelo));
     }
 
-    @PatchMapping
-    public ResponseEntity<ModeloDTO> atualizarModelo(@RequestBody Modelo modelo) {
+    @Override
+    public ResponseEntity<?> update(Modelo modelo) {
         return ResponseEntity.status(HttpStatus.OK).body(service.atualizarModelo(modelo));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deletarModelo(@PathVariable(value = "id") Integer id) {
+    @Override
+    public ResponseEntity<String> delete(Integer id) {
         return ResponseEntity.status(HttpStatus.OK).body(service.deletarModelo(id));
     }
 }

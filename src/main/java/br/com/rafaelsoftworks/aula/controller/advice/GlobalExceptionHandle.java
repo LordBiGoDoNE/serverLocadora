@@ -1,7 +1,6 @@
 package br.com.rafaelsoftworks.aula.controller.advice;
 
 import br.com.rafaelsoftworks.aula.exception.AbstractMinhaException;
-import br.com.rafaelsoftworks.aula.exception.ValorJaExistenteNaBaseDeDadosException;
 import br.com.rafaelsoftworks.aula.model.json.response.ExceptionResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +9,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 
 @RestController

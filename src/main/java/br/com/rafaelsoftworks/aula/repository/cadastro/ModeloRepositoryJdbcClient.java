@@ -1,26 +1,25 @@
 package br.com.rafaelsoftworks.aula.repository.cadastro;
 
+import br.com.rafaelsoftworks.aula.filter.ModeloFilter;
 import br.com.rafaelsoftworks.aula.model.dto.ModeloDTO;
 import br.com.rafaelsoftworks.aula.model.entity.Fabricante;
 import br.com.rafaelsoftworks.aula.model.entity.Modelo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
-public class ModeloRepositoryCustom {
+public class ModeloRepositoryJdbcClient {
 
     @Autowired
     JdbcClient jdbcClient;
 
-    RowMapper<ModeloDTO> modeloMapper = (rs, rowNum) -> {
+    RowMapper<ModeloDTO> modeloDTORowMapper = (rs, rowNum) -> {
         ModeloDTO modelo = new ModeloDTO();
         modelo.setId(rs.getInt("id"));
         modelo.setDescricao(rs.getString("descricao"));
@@ -34,26 +33,43 @@ public class ModeloRepositoryCustom {
         return modelo;
     };
 
-    public List<ModeloDTO> buscarTodosModelos(Integer idFabricante) {
-        if (idFabricante <= 0) {
+    public List<ModeloDTO> buscarTodosModelosDTO(ModeloFilter modeloFilter) {
+        StringJoiner where = new StringJoiner(" AND ");
+
+        Map<String, Object> params = new HashMap<>();
+
+        if (modeloFilter.getDescricao() != null) {
+            where.add("id_modelo = :idModelo");
+            params.put("idModelo", modeloFilter.getDescricao());
+        }
+
+        if (modeloFilter.getIdFabricante() != null) {
+            where.add("id_fabricante = :idFabricante");
+            params.put("idFabricante", modeloFilter.getIdFabricante());
+        }
+
+        String sql = "SELECT m.*, f.id as idFabricante, f.nome FROM modelo m INNER JOIN fabricante f ON m.id_fabricante = f.id";
+
+        if (!params.isEmpty()) {
+            String sqlWhere = sql + " WHERE " + where;
+
             return jdbcClient
-                    .sql("SELECT m.*, f.id as idFabricante, f.nome FROM modelo m INNER JOIN fabricante f ON m.id_fabricante = f.id")
-                    .query(modeloMapper)
+                    .sql(sqlWhere)
+                    .query(modeloDTORowMapper)
                     .list();
         } else {
             return jdbcClient
-                    .sql("SELECT m.*, f.id as idFabricante, f.nome FROM modelo m INNER JOIN fabricante f ON m.id_fabricante = f.id WHERE m.id_fabricante = :idFabricante")
-                    .param("idFabricante", idFabricante)
-                    .query(modeloMapper)
+                    .sql(sql)
+                    .query(modeloDTORowMapper)
                     .list();
         }
     }
 
     public Optional<ModeloDTO> buscarModeloPorId(Integer idModelo) {
             return jdbcClient
-                    .sql("SELECT m.*, f.id as idFabricante, f.nome FROM modelo m INNER JOIN fabricante f ON m.id_fabricante = f.id WHERE id = :idModelo")
+                    .sql("SELECT m.*, f.id as idFabricante, f.nome FROM modelo m INNER JOIN fabricante f ON m.id_fabricante = f.id WHERE m.id = :idModelo")
                     .param("idModelo", idModelo)
-                    .query(modeloMapper)
+                    .query(modeloDTORowMapper)
                     .optional();
     }
 

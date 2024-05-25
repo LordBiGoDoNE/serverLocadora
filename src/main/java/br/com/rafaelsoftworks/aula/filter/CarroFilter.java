@@ -24,26 +24,22 @@ public class CarroFilter {
     public CarroFilter(Map<String, String> parametros) {
         parametros.forEach((chave, valor) -> {
             switch (chave) {
-                case Fields.idModelo:
+                case CarroFilter.Fields.idModelo:
                     idModelo = Integer.valueOf(valor);
                     break;
-                case Fields.cor:
+                case CarroFilter.Fields.cor:
                     cor = valor;
                     break;
-                case Fields.placa:
+                case CarroFilter.Fields.placa:
                     placa = valor;
                     break;
-                case Fields.disponivel:
+                case CarroFilter.Fields.disponivel:
                     disponivel = Boolean.valueOf(valor);
                     break;
-                case Fields.ano:
+                case CarroFilter.Fields.ano:
                     ano = Integer.valueOf(valor);
                     break;
             }
         });
-    }
-
-    public boolean isVazio() {
-        return this.hashCode() == new CarroFilter().hashCode();
     }
 }
